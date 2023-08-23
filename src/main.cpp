@@ -22,6 +22,9 @@ bool isFire = 0;
 bool isGas = 0;
 unsigned long millisThinger;
 
+void fireDetect(bool *state);
+void gasDetect(bool *state, int tresshold);
+
 void setup()
 {
   Serial.begin(115200);
@@ -44,8 +47,10 @@ void loop()
 {
 #ifdef ESP32
   espSerial.read();
-  espSerial.flame1 == 1 || espSerial.flame2 == 1 ? isFire = 1 : isFire = 0;
-  espSerial.gas > 700 ? isGas = 1 : isGas = 0;
+  // espSerial.flame1 == 1 || espSerial.flame2 == 1 ? isFire = 1 : isFire = 0;
+  fireDetect(&isFire);
+  // espSerial.gas > 700 ? isGas = 1 : isGas = 0;
+  gasDetect(&isGas, 700);
 
   if (millis() - millisThinger >= 3000)
   {
@@ -68,3 +73,13 @@ void sendSensorData()
   delay(1000);
 }
 #endif
+
+void fireDetect(bool *state)
+{
+  espSerial.flame1 == 1 || espSerial.flame2 == 1 ? *state = true : *state = false;
+}
+
+void gasDetect(bool *state, int tresshold)
+{
+  espSerial.gas > tresshold ? *state = true : *state = false;
+}

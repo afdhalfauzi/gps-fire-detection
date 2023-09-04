@@ -22,6 +22,8 @@ struct GPS
 
     bool begin();
     String getLocation();
+    String getLatitude();
+    String getLongitude();
 };
 
 bool GPS::begin()
@@ -37,11 +39,16 @@ bool GPS::begin()
     return 1;
 }
 
-String GPS::getLocation()
+String GPS::getLatitude()
 {
     smartDelay(1000);
-    String location = String(mygps.location.lat(), 6) + "," + String(mygps.location.lng(), 6);
-    return location;
+    return String(mygps.location.lat(), 6);
+}
+
+String GPS::getLongitude()
+{
+    smartDelay(1000);
+    return String(mygps.location.lng(), 6);
 }
 
 // This custom version of delay() ensures that the gps object

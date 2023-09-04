@@ -13,7 +13,7 @@ ESPSERIAL espSerial;
 #include <SoftwareSerial.h>
 
 FLAME flame1(2);
-FLAME flame2(7);
+FLAME flame2(3);
 GAS gas(A5);
 SoftwareSerial serial(8, 9);
 #endif
@@ -22,6 +22,7 @@ bool isFire = 0;
 bool isGas = 0;
 unsigned long millisThinger;
 
+void sendSensorData();
 void setup()
 {
   Serial.begin(115200);
@@ -50,8 +51,10 @@ void loop()
   if (millis() - millisThinger >= 3000)
   {
     millisThinger = millis();
-    thingerio.send(isFire, isGas, gps.getLocation());
-    Serial.printf("f1=%i f2=%i gas=%i received=%s send=%i,%i\n", espSerial.flame1, espSerial.flame2, espSerial.gas, espSerial.message.c_str(), isFire, isGas);
+    String latitude = gps.getLatitude();
+    String longitude = gps.getLongitude();
+    thingerio.send(isFire, isGas, latitude, longitude);
+    Serial.printf("fire=%i gas=%i latitude=%s longitude=%s\n", isFire, isGas, latitude.c_str(), longitude.c_str());
   }
 
 #else
@@ -65,6 +68,7 @@ void sendSensorData()
   char payload[6];
   sprintf(payload, "%i;%i;%i;", flame1.read(), flame2.read(), gas.read());
   serial.write(payload);
-  delay(1000);
+  Serial.println(payload);
+  delay(100);
 }
 #endif

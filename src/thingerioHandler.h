@@ -16,12 +16,15 @@ ThingerESP32 thing(USERNAME, DEVICE_ID, DEVICE_CREDENTIAL);
 
 struct THINGER
 {
-    bool fire = 0;
+    bool fire;
     bool gas;
-    String location;
+    String fireState;
+    String gasState;
+    String latitude;
+    String longitude;
 
     bool begin();
-    bool send(bool _fires, bool _gas, String _location);
+    bool send(bool _fire, bool _gas, String _latitude, String _longitude);
 };
 
 bool THINGER::begin()
@@ -30,25 +33,30 @@ bool THINGER::begin()
 
     thing["Sensor"] >> [&](pson &out)
     {
-        out["fire"] = fire;
-        out["gas"] = gas;
-        out["location"] = location;
+        out["fire"] = fireState;
+        out["gas"] = gasState;
+        out["latitude"] = latitude;
+        out["longitude"] = longitude;
     };
 
     return 1;
 }
 
-bool THINGER::send(bool _fire, bool _gas, String _location)
+bool THINGER::send(bool _fire, bool _gas, String _latitude, String _longitude)
 {
     fire = _fire;
     gas = _gas;
-    location = _location;
+    latitude = _latitude;
+    longitude = _longitude;
+    fire ? fireState = "Api Terdeteksi" : fireState = "Aman";
+    gas ? gasState = "Gas Terdeteksi" : gasState = "Aman";
     if (fire || gas)
     {
         pson data;
-        data["fire"] = fire;
-        data["gas"] = gas;
-        data["location"] = location;
+        data["fire"] = fireState;
+        data["gas"] = gasState;
+        data["latitude"] = latitude;
+        data["longitude"] = longitude;
         thing.call_endpoint("deteksi_api", data);
     }
     thing.handle();

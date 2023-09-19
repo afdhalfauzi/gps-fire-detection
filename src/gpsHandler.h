@@ -21,6 +21,7 @@ struct GPS
     }
 
     bool begin();
+    bool isValid();
     String getLocation();
     String getLatitude();
     String getLongitude();
@@ -29,14 +30,17 @@ struct GPS
 bool GPS::begin()
 {
     ss.begin(GPSBaud);
-    Serial.println(F("DeviceExample.ino"));
-    Serial.println(F("A simple demonstration of TinyGPSPlus with an attached GPS module"));
-    Serial.print(F("Testing TinyGPSPlus library v. "));
+    Serial.print(F("TinyGPSPlus library v. "));
     Serial.println(TinyGPSPlus::libraryVersion());
-    Serial.println(F("by Mikal Hart"));
-    Serial.println();
+    Serial.println("GPS Ok");
 
     return 1;
+}
+
+bool GPS::isValid()
+{
+    return mygps.location.isValid();
+    smartDelay(0);
 }
 
 String GPS::getLatitude()

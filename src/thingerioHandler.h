@@ -4,9 +4,9 @@
 #define THINGER_SERIAL_DEBUG
 
 // Thinger IO configuration
-#define USERNAME "afdhalfauzi"
+#define USERNAME "gpsfiredetection"
 #define DEVICE_ID "deteksi_api"
-#define DEVICE_CREDENTIAL "7J0HEZhH1dxWY$zS"
+#define DEVICE_CREDENTIAL "IE6GuPu-pnRAn-hK"
 
 // WiFi configuration
 #define SSID "BMZimages"
@@ -50,7 +50,7 @@ bool THINGER::send(bool _fire, bool _gas, String _latitude, String _longitude)
     longitude = _longitude;
     fire ? fireState = "Api Terdeteksi" : fireState = "Aman";
     gas ? gasState = "Gas Terdeteksi" : gasState = "Aman";
-    if (fire || gas)
+    if (fire || gas) // Send email notification
     {
         pson data;
         data["fire"] = fireState;

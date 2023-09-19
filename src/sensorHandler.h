@@ -20,10 +20,7 @@ bool FLAME::begin()
 
 int FLAME::read()
 {
-    if (digitalRead(pin))
-        return 1;
-
-    return 0;
+    return digitalRead(pin);
 }
 
 struct GAS

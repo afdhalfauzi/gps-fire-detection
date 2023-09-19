@@ -1,13 +1,9 @@
 #include <Arduino.h>
-#include <SoftwareSerial.h>
-
-SoftwareSerial ser(18, 19);
 
 struct ESPSERIAL
 {
-    bool flame1;
-    bool flame2;
-    int gas;
+    bool flame;
+    bool gas;
     String message;
 
     bool begin();
@@ -17,22 +13,20 @@ struct ESPSERIAL
 
 bool ESPSERIAL::begin()
 {
-    ser.begin(115200);
-    ser.setTimeout(50);
+    Serial2.begin(115200, SERIAL_8N1, 18, 19);
+    Serial2.setTimeout(50);
 
     return 1;
 }
 
 String ESPSERIAL::read()
 {
-        ser.flush();
-    if (ser.available())
+    if (Serial2.available())
     {
-        // vTaskDelay(50);
-        message = ser.readString();
-        flame1 = ESPSERIAL::splitString(message, ';', 0) == "1" ? 1 : 0;
-        flame2 = ESPSERIAL::splitString(message, ';', 1) == "1" ? 1 : 0;
-        gas = ESPSERIAL::splitString(message, ';', 2).toInt();
+        message = Serial2.readString();
+        flame = splitString(message, ';', 0) == "1" ? 1 : 0; // string to bool
+        gas = splitString(message, ';', 1) == "1" ? 1 : 0;   // string to bool
+        Serial.println(message);
     }
     return message;
 }
